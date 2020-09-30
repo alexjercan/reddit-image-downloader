@@ -24,6 +24,8 @@ namespace RIM_CLI
                 if (i >= maxImages) break;
                 var dataUrl = post.Data.Url;
                 var dataTitle = post.Data.Title;
+                
+                if (images.ContainsKey(dataTitle)) continue;
 
                 var imageData = webClient.DownloadData(dataUrl);
 
