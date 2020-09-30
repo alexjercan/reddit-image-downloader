@@ -1,12 +1,25 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace RIM_CLI
 {
-    class Program
+    internal static class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            var subReddit = args[0];
+            var maxImages = Convert.ToInt32(args[1]);
+
+            var images = ImageProvider.GetImagesFromSubReddit(subReddit, maxImages);
+
+            WriteImagesToFiles(subReddit, images);
+        }
+
+        private static void WriteImagesToFiles(string subReddit, Dictionary<string, byte[]> images)
+        {
+            var outputDirectory = $"Images-{subReddit}";
+            var outputPath = FileBuilder.CreateDirectory(outputDirectory);
+            FileBuilder.CreateImageFiles(outputPath, images);
         }
     }
 }
