@@ -10,3 +10,5 @@ The images will be saved with the name of the posts, removing any invalid charac
 ### USAGE
 
 path/to/executable/RIM_CLI.exe subreddit_name images_count
+
+![alt text](https://i.imgur.com/0u7DIgK.jpg)
