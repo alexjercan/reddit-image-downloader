@@ -8,7 +8,7 @@ namespace RIM_CLI
         private static void Main(string[] args)
         {
             var subReddit = args[0];
-            var maxImages = Math.Clamp(0, 100, Convert.ToInt32(args[1]));
+            var maxImages = Math.Clamp(Convert.ToInt32(args[1]), 0, 100);
 
             var images = ImageProvider.GetImagesFromSubReddit(subReddit, maxImages);
 
