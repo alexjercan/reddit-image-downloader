@@ -49,17 +49,9 @@ namespace RIM_CLI
         
         private static void RimThreading(string subreddit, int imagesCount)
         {
-            var subredditBuffer = new SubredditBufferThreading(subreddit);
-            var imageProvider = new ImageProviderThreading(imagesCount, subredditBuffer);
-
-            var outputPath = FileBuilder.CreateDirectory($"Images-{subreddit}");
-
-            var images = imageProvider.GetImages();
-            foreach (var image in images)
-            {
-                FileBuilder.CreateImageFile(outputPath, image);
-                Console.WriteLine($"Created File \"{image.Title}\"");
-            }
+            var rim = new RimThreading(imagesCount, subreddit);
+            
+            rim.RunThreads();
         }
     }
 }
