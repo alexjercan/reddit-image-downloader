@@ -14,7 +14,7 @@ namespace RIM_CLI
 
             using var webClient = new WebClient();
             var json = webClient.DownloadString(url);
-            var subRedditObject = JsonConvert.DeserializeObject<SubRedditObject>(json);
+            var subRedditObject = JsonConvert.DeserializeObject<SubredditObject>(json);
             var posts = subRedditObject.Data.Posts;
 
             for (var index = 0; index < posts.Count; index++)

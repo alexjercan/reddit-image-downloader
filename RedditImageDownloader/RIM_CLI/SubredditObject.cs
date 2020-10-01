@@ -3,12 +3,12 @@ using Newtonsoft.Json;
 
 namespace RIM_CLI
 {
-    public class SubRedditObject
+    public class SubredditObject
     {
-        [JsonProperty("data")] public SubRedditData Data { get; set; }
+        [JsonProperty("data")] public SubredditData Data { get; set; }
     }
     
-    public class SubRedditData
+    public class SubredditData
     {
         [JsonProperty("children")] public IList<PostObject> Posts { get; set; }
     }
@@ -22,6 +22,6 @@ namespace RIM_CLI
     {
         [JsonProperty("url")] public string Url { get; set; }
         [JsonProperty("title")] public string Title { get; set; }
+        [JsonProperty("name")] public string Name { get; set; }
     }
-    
 }
