@@ -4,6 +4,7 @@ namespace RIM_CLI
 {
     public struct Image
     {
+        public string Name { get; set; }
         public string Title { get; set; }
         public byte[] Data { get; set; }
 

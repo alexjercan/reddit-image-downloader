@@ -15,7 +15,7 @@
 
                 var imageData = Networking.DownloadData(postData.Url);
 
-                var image = new Image {Data = imageData, Title = postData.Title};
+                var image = new Image {Name = postData.Name, Data = imageData, Title = postData.Title};
                 if (!image.HasJpegHeader) continue;
                 return image;
             }

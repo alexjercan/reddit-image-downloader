@@ -17,8 +17,9 @@ namespace RIM_CLI
         
         public PostData GetPost()
         {
-            if (!_posts.TryDequeue(out _lastPost)) _lastPost = GetPostInternal();
-            
+            if (!_posts.TryDequeue(out var lastPost)) lastPost = GetPostInternal();
+
+            _lastPost = lastPost;
             return _lastPost;
         }
 

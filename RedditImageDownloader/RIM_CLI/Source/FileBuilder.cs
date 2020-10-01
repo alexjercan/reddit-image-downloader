@@ -20,7 +20,7 @@ namespace RIM_CLI
 
         public static void CreateImageFile(string directoryPath, Image image)
         {
-            var fileName = $"{image.Title}.jpg";
+            var fileName = $"{image.Name} - {image.Title}.jpg";
             if (!IsFileNameValid(fileName)) RemoveInvalidCharacters(ref fileName);
             
             var filePath = Path.Combine(directoryPath, fileName);
