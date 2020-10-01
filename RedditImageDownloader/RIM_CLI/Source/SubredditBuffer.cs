@@ -1,6 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Net;
-using Newtonsoft.Json;
 
 namespace RIM_CLI
 {
@@ -33,17 +31,10 @@ namespace RIM_CLI
         private void FetchPosts()
         {
             var url = _lastPost != null ? $"{_subredditUrl}&after={_lastPost.Name}" : _subredditUrl;
-            var json = DownloadJson<SubredditObject>(url);
+            var json = Networking.DownloadJson<SubredditObject>(url);
             
             _posts.Clear();
             foreach (var post in json.Data.Posts) _posts.Enqueue(post.Data);
         }
-
-        private static T DownloadJson<T>(string url)
-        {
-            using var webClient = new WebClient();
-            var jsonString = webClient.DownloadString(url);
-            return JsonConvert.DeserializeObject<T>(jsonString);
-        }  
     }
 }

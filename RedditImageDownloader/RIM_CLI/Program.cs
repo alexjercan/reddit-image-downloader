@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 
 namespace RIM_CLI
 {
@@ -8,18 +7,18 @@ namespace RIM_CLI
         private static void Main(string[] args)
         {
             var subReddit = args[0];
-            var maxImages = Math.Clamp(Convert.ToInt32(args[1]), 0, 100);
+            var imagesCount = Math.Clamp(Convert.ToInt32(args[1]), 0, 100);
 
-            var images = ImageProvider.GetImagesFromSubReddit(subReddit, maxImages);
+            var imageProvider = new ImageProvider(subReddit);
 
-            WriteImagesToFiles(subReddit, images);
-        }
+            var outputPath = FileBuilder.CreateDirectory($"Images-{subReddit}");
 
-        private static void WriteImagesToFiles(string subReddit, Dictionary<string, byte[]> images)
-        {
-            var outputDirectory = $"Images-{subReddit}";
-            var outputPath = FileBuilder.CreateDirectory(outputDirectory);
-            FileBuilder.CreateImageFiles(outputPath, images);
+            for (var i = 0; i < imagesCount; i++)
+            {
+                var image = imageProvider.GetImage();
+                if (image.IsEmpty) return;
+                FileBuilder.CreateImageFile(outputPath, image);
+            }
         }
     }
 }

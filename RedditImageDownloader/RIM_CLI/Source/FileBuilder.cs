@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -19,20 +17,15 @@ namespace RIM_CLI
 
             return directoryPath;
         }
-        
-        public static void CreateImageFiles(string directoryPath, Dictionary<string, byte[]> images)
+
+        public static void CreateImageFile(string directoryPath, Image image)
         {
-            foreach (var (key, imageData) in images)
-            {
-                var fileName = $"{key}.jpg";
-                if (!IsFileNameValid(fileName)) RemoveInvalidCharacters(ref fileName);
-                
-                Console.WriteLine($"Creating File {fileName}");
-                
-                var filePath = Path.Combine(directoryPath, fileName);
-                var fileStream = File.Create(filePath);
-                fileStream.Write(imageData);
-            }
+            var fileName = $"{image.Title}.jpg";
+            if (!IsFileNameValid(fileName)) RemoveInvalidCharacters(ref fileName);
+            
+            var filePath = Path.Combine(directoryPath, fileName);
+            var fileStream = File.Create(filePath);
+            fileStream.Write(image.Data);
         }
 
         private static bool IsFileNameValid(string fileName) => 
