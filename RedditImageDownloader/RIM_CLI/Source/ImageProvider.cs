@@ -4,9 +4,9 @@
     {
         private readonly SubredditBuffer _buffer;
 
-        public ImageProvider(string subreddit)
+        public ImageProvider(SubredditBuffer buffer)
         {
-            _buffer = new SubredditBuffer(subreddit);
+            _buffer = buffer; 
         }
 
         public Image GetImage()

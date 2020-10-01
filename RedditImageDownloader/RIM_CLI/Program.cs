@@ -9,7 +9,8 @@ namespace RIM_CLI
             var subReddit = args[0];
             var imagesCount = Math.Clamp(Convert.ToInt32(args[1]), 0, 100);
 
-            var imageProvider = new ImageProvider(subReddit);
+            var subredditBuffer = new SubredditBuffer(subReddit);
+            var imageProvider = new ImageProvider(subredditBuffer);
 
             var outputPath = FileBuilder.CreateDirectory($"Images-{subReddit}");
 
