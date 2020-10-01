@@ -1,62 +1,65 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Threading;
+using System.Diagnostics;
 
 namespace RIM_CLI
 {
     internal static class Program
     {
-        private const int NrThreads = 4;
-        private static Thread[] _threads = new Thread[NrThreads];
-        private static Mutex _mutex = new Mutex();
-        private static List<Image> _images = new List<Image>();
-        
         private static void Main(string[] args)
         {
-            var subReddit = args[0];
+            var subreddit = args[0];
             var imagesCount = Math.Clamp(Convert.ToInt32(args[1]), 0, 100);
 
-            var subredditBuffer = new SubredditBufferThreading(subReddit);
+            RimThreading(subreddit, imagesCount);
+        }
 
-            var outputPath = FileBuilder.CreateDirectory($"Images-{subReddit}");
+        private static void PerformanceCheck(string subreddit, int imagesCount)
+        {
+            var stopwatch = new Stopwatch();
+            
+            stopwatch.Start();
+            RimThreading(subreddit, imagesCount);
+            stopwatch.Stop();
 
-            for (var i = 0; i < NrThreads; i++) _threads[i] = new Thread(GetImages);
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            
+            stopwatch.Reset();
+            stopwatch.Start();
+            Rim(subreddit, imagesCount);
+            stopwatch.Stop();
+            
+            Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            
+        }
 
-            var imagesPerThread = imagesCount / NrThreads;
-            for (var i = 0; i < NrThreads - 1; i++)
-                _threads[i].Start(new ThreadArgument {Buffer = subredditBuffer, ImagesPerThread = imagesPerThread});
-            _threads[NrThreads - 1].Start(new ThreadArgument {Buffer = subredditBuffer, ImagesPerThread = imagesCount - (NrThreads - 1) * imagesPerThread});
+        private static void Rim(string subreddit, int imagesCount)
+        {
+            var subredditBuffer = new SubredditBuffer(subreddit);
+            var imageProvider = new ImageProvider(subredditBuffer);
+            
+            var outputPath = FileBuilder.CreateDirectory($"Images-{subreddit}");
 
-            for (var i = 0; i < NrThreads; i++) _threads[i].Join();
-
-            foreach (var image in _images)
+            for (var i = 0; i < imagesCount; i++)
             {
+                var image = imageProvider.GetImage();
                 FileBuilder.CreateImageFile(outputPath, image);
                 Console.WriteLine($"Created File \"{image.Title}\"");
             }
         }
-
-        private static void GetImages(object arg)
+        
+        private static void RimThreading(string subreddit, int imagesCount)
         {
-            var data = (ThreadArgument) arg;
-            var imagesPerThread = data.ImagesPerThread;
-            var imageProvider = new ImageProvider(data.Buffer);
-            
-            for (var i = 0; i < imagesPerThread; i++)
+            var subredditBuffer = new SubredditBufferThreading(subreddit);
+            var imageProvider = new ImageProviderThreading(imagesCount, subredditBuffer);
+
+            var outputPath = FileBuilder.CreateDirectory($"Images-{subreddit}");
+
+            var images = imageProvider.GetImages();
+            foreach (var image in images)
             {
-                var image = imageProvider.GetImage();
-                if (image.IsEmpty) return;
-
-                _mutex.WaitOne();
-                _images.Add(image);
-                _mutex.ReleaseMutex();
+                FileBuilder.CreateImageFile(outputPath, image);
+                Console.WriteLine($"Created File \"{image.Title}\"");
             }
-        }
-
-        private class ThreadArgument
-        {
-            public ISubredditBuffer Buffer { get; set; }
-            public int ImagesPerThread { get; set; }
         }
     }
 }
