@@ -1,6 +1,6 @@
 ﻿namespace RIM_CLI
 {
-    public interface ISubredditBuffer
+    public interface IPostDataQueue
     {
         PostData GetPost();
     }

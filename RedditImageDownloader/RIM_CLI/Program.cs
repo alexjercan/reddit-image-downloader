@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 
 namespace RIM_CLI
 {
@@ -10,48 +9,21 @@ namespace RIM_CLI
             var subreddit = args[0];
             var imagesCount = Math.Clamp(Convert.ToInt32(args[1]), 0, 100);
 
-            RimThreading(subreddit, imagesCount);
-        }
-
-        private static void PerformanceCheck(string subreddit, int imagesCount)
-        {
-            var stopwatch = new Stopwatch();
-            
-            stopwatch.Start();
-            RimThreading(subreddit, imagesCount);
-            stopwatch.Stop();
-
-            Console.WriteLine(stopwatch.ElapsedMilliseconds);
-            
-            stopwatch.Reset();
-            stopwatch.Start();
-            Rim(subreddit, imagesCount);
-            stopwatch.Stop();
-            
-            Console.WriteLine(stopwatch.ElapsedMilliseconds);
-            
-        }
-
-        private static void Rim(string subreddit, int imagesCount)
-        {
-            var subredditBuffer = new SubredditBuffer(subreddit);
-            var imageProvider = new ImageProvider(subredditBuffer);
-            
-            var outputPath = FileBuilder.CreateDirectory($"Images-{subreddit}");
-
-            for (var i = 0; i < imagesCount; i++)
+            if (args.Length <= 2)
             {
-                var image = imageProvider.GetImage();
-                FileBuilder.CreateImageFile(outputPath, image);
-                Console.WriteLine($"Created File \"{image.Title}\"");
+                Rim(subreddit, imagesCount);
+            }
+            else
+            {
+                var nrThreads = Convert.ToInt32(args[2]);
+                RimThreading(subreddit, imagesCount, nrThreads);
             }
         }
-        
-        private static void RimThreading(string subreddit, int imagesCount)
-        {
-            var rim = new RimThreading(imagesCount, subreddit);
-            
-            rim.RunThreads();
-        }
+
+        private static void Rim(string subreddit, int imagesCount) => 
+            new Rim(subreddit, imagesCount).Run();
+
+        private static void RimThreading(string subreddit, int imagesCount, int nrThreads) => 
+            new RimThreading(subreddit, imagesCount, nrThreads).Run();
     }
 }

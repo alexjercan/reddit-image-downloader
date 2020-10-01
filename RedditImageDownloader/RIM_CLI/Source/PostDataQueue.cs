@@ -2,7 +2,7 @@
 
 namespace RIM_CLI
 {
-    public class SubredditBuffer : ISubredditBuffer
+    public class PostDataQueue : IPostDataQueue
     {
         private const int MaxBufferSize = 100;
         
@@ -10,7 +10,7 @@ namespace RIM_CLI
         private readonly string _subredditUrl;
         private PostData _lastPost;
         
-        public SubredditBuffer(string subreddit)
+        public PostDataQueue(string subreddit)
         {
             _subredditUrl = $"http://www.reddit.com/r/{subreddit}.json?limit={MaxBufferSize}";
         }

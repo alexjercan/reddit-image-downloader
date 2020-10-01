@@ -3,32 +3,32 @@ using System.Threading;
 
 namespace RIM_CLI
 {
-    public class ImagesBuffer
+    public class ThreadSafeQueue<T>
     {
-        private readonly Queue<Image> _images;
+        private readonly Queue<T> _elements;
 
         private readonly Semaphore _empty;
         private readonly Mutex _mutex = new Mutex();
 
-        public ImagesBuffer(int maxSize)
+        public ThreadSafeQueue(int maxSize)
         {
             _empty = new Semaphore(0, maxSize);
-            _images = new Queue<Image>(maxSize);
+            _elements = new Queue<T>(maxSize);
         }
         
-        public void Add(Image image)
+        public void Add(T element)
         {
             _mutex.WaitOne();
-            _images.Enqueue(image);
+            _elements.Enqueue(element);
             _mutex.ReleaseMutex();
             _empty.Release();
         }
 
-        public Image Get()
+        public T Get()
         {
             _empty.WaitOne();
             _mutex.WaitOne();
-            var result = _images.Dequeue();
+            var result = _elements.Dequeue();
             _mutex.ReleaseMutex();
 
             return result;

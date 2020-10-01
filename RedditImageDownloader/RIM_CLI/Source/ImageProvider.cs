@@ -2,15 +2,15 @@
 {
     public class ImageProvider
     {
-        private readonly ISubredditBuffer _buffer;
+        private readonly IPostDataQueue _queue;
 
-        public ImageProvider(ISubredditBuffer buffer) => _buffer = buffer;
+        public ImageProvider(IPostDataQueue queue) => _queue = queue;
 
         public Image GetImage()
         {
             while (true)
             {
-                var postData = _buffer.GetPost();
+                var postData = _queue.GetPost();
                 if (postData == null) return new Image();
 
                 var imageData = Networking.DownloadData(postData.Url);
