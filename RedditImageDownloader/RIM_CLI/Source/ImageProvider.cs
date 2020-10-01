@@ -2,12 +2,9 @@
 {
     public class ImageProvider
     {
-        private readonly SubredditBuffer _buffer;
+        private readonly ISubredditBuffer _buffer;
 
-        public ImageProvider(SubredditBuffer buffer)
-        {
-            _buffer = buffer; 
-        }
+        public ImageProvider(ISubredditBuffer buffer) => _buffer = buffer;
 
         public Image GetImage()
         {

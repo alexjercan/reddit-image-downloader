@@ -2,11 +2,11 @@
 
 namespace RIM_CLI
 {
-    public class SubredditBuffer
+    public class SubredditBuffer : ISubredditBuffer
     {
         private const int MaxBufferSize = 100;
         
-        private Queue<PostData> _posts = new Queue<PostData>(MaxBufferSize);
+        private readonly Queue<PostData> _posts = new Queue<PostData>(MaxBufferSize);
         private readonly string _subredditUrl;
         private PostData _lastPost;
         
