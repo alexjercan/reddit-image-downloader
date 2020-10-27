@@ -14,6 +14,7 @@
                 if (postData == null) return new Image();
 
                 var imageData = Networking.DownloadData(postData.Url);
+                if (imageData == null) continue;
 
                 var image = new Image {Name = postData.Name, Data = imageData, Title = postData.Title};
                 if (!image.HasJpegHeader) continue;

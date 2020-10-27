@@ -33,6 +33,7 @@ namespace RIM_CLI
         {
             var url = _lastPost != null ? $"{_subredditUrl}&after={_lastPost.Name}" : _subredditUrl;
             var json = Networking.DownloadJson<SubredditObject>(url);
+            if (json == default) return;
             
             _posts.Clear();
             foreach (var post in json.Data.Posts) _posts.Enqueue(post.Data);
